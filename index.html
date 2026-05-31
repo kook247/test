@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeFlow AI — 用AI编程，让普通人也能创造与赚钱</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf9;
+            --surface: #ffffff;
+            --surface-alt: #f5f4f1;
+            --text-primary: #1a1a1a;
+            --text-secondary: #5c5c5c;
+            --text-tertiary: #8a8a8a;
+            --border: #e8e5e0;
+            --border-light: #f0ede8;
+            --accent: #1a1a1a;
+            --accent-hover: #3a3a3a;
+            --accent-soft: #f3f0eb;
+            --highlight: #c8a87c;
+            --highlight-soft: #faf6f0;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-slow: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --max-width: 1200px;
+            --section-padding: 100px;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 60px;
+                --radius-lg: 16px;
+                --radius-xl: 20px;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+            overflow-x: hidden;
+        }
+
+        /* ============ NAVIGATION ============ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(250, 250, 249, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            transition: all var(--transition);
+            padding: 0 24px;
+        }
+
+        .nav.scrolled {
+            border-bottom-color: var(--border);
+            box-shadow: var(--shadow-sm);
+            background: rgba(250, 250, 249, 0.95);
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .nav-logo-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--highlight);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            transition: color var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: var(--text-primary);
+            transition: width var(--transition);
+            border-radius: 1px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            display: inline-block;
+            padding: 10px 22px;
+            background: var(--accent);
+            color: #fff !important;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.01em;
+            transition: all var(--transition);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .nav-cta::after {
+            display: none;
+        }
+
+        /* Hamburger */
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+            background: none;
+            border: none;
+        }
+
+        .nav-hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all var(--transition);
+            transform-origin: center;
+        }
+
+        .nav-hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .nav-hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .nav-hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: var(--surface);
+                flex-direction: column;
+                padding: 100px 32px 40px;
+                gap: 24px;
+                box-shadow: var(--shadow-lg);
+                transition: right var(--transition-slow);
+                align-items: flex-start;
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .nav-links a {
+                font-size: 1.05rem;
+            }
+            .nav-hamburger {
+                display: flex;
+            }
+            .nav-cta {
+                padding: 12px 28px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ============ HERO ============ */
+        .hero {
+            padding: 160px 24px 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(200, 168, 124, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 750px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--accent-soft);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            border: 1px solid var(--border-light);
+        }
+
+        .hero-badge-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            margin-right: 8px;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.6);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5.5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .hero h1 .highlight-word {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1 .highlight-word::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: var(--highlight-soft);
+            border-radius: 4px;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.7;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: none;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--surface-alt);
+            border-color: #d0ccc5;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ============ STATS BAR ============ */
+        .stats-bar {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding-top: 36px;
+            padding-bottom: 36px;
+        }
+
+        .stat-item {
+            text-align: center;
+            border-right: 1px solid var(--border-light);
+            padding: 0 20px;
+        }
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                border: none;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            .stat-item {
+                border-right: none;
+                padding: 0;
+            }
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* ============ SECTION COMMON ============ */
+        .section {
+            padding: var(--section-padding) 24px;
+        }
+
+        .section-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--highlight);
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+            line-height: 1.25;
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 580px;
+            line-height: 1.7;
+            margin-bottom: 48px;
+        }
+
+        /* ============ CONTRAST ============ */
+        .contrast-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .contrast-card {
+            padding: 36px 32px;
+            border-radius: var(--radius-lg);
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+
+        .contrast-card.old {
+            background: #f9f8f6;
+            border: 1px solid var(--border);
+        }
+
+        .contrast-card.new {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contrast-card .card-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .contrast-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .contrast-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .contrast-card .card-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            margin-top: 16px;
+        }
+
+        .contrast-card.old .card-tag {
+            background: #f0ede7;
+            color: #8a7e6e;
+        }
+        .contrast-card.new .card-tag {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        @media (max-width: 768px) {
+            .contrast-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============ ROUTE CARDS ============ */
+        .route-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .route-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px;
+            transition: all var(--transition);
+            position: relative;
+            cursor: default;
+        }
+
+        .route-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: #d8d3ca;
+        }
+
+        .route-card-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent-soft);
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .route-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .route-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .route-card .route-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .route-tag {
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 50px;
+            background: var(--surface-alt);
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            border: 1px solid var(--border-light);
+        }
+
+        @media (max-width: 900px) {
+            .route-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .route-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============ INTERACTIVE NAVIGATOR ============ */
+        .navigator-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 40px 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navigator-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 16px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            transition: all var(--transition);
+            font-family: inherit;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: var(--surface-alt);
+            border-color: #c8c3b8;
+        }
+        .nav-tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .navigator-content {
+            display: none;
+            animation: fadeSlideIn 0.4s ease;
+        }
+        .navigator-content.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navigator-content h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+        .navigator-content p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+        .navigator-content .rec-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .rec-chip {
+            padding: 8px 16px;
+            background: var(--accent-soft);
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            letter-spacing: 0.01em;
+            border: 1px solid var(--border-light);
+        }
+
+        /* ============ CASE CARDS ============ */
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .case-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+        .case-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .case-card-visual {
+            height: 180px;
+            background: var(--surface-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            letter-spacing: -0.02em;
+            font-weight: 900;
+            color: #d5d0c7;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-card-visual .case-emoji {
+            font-size: 3.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .case-card-body {
+            padding: 24px 22px;
+        }
+
+        .case-card-body .case-meta {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .case-card-body h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .case-card-body p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .case-result {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #2e7d32;
+            background: #f0faf0;
+            padding: 4px 12px;
+            border-radius: 50px;
+            letter-spacing: 0.01em;
+        }
+
+        @media (max-width: 900px) {
+            .case-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .case-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============ ABOUT ============ */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .about-text p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+        }
+
+        .about-visual {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .about-stat-box {
+            flex: 1;
+            min-width: 120px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px 20px;
+            text-align: center;
+            transition: all var(--transition);
+        }
+        .about-stat-box:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .about-stat-box .big-num {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .about-stat-box .lbl {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .about-visual {
+                gap: 10px;
+            }
+            .about-stat-box {
+                min-width: 80px;
+                padding: 16px 12px;
+            }
+            .about-stat-box .big-num {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ============ COMMUNITY ============ */
+        .community-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .community-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px 22px;
+            text-align: center;
+            transition: all var(--transition);
+        }
+        .community-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .community-item .comm-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .community-item h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+        .community-item p {
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .community-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 500px) {
+            .community-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .community-item {
+                padding: 20px 14px;
+            }
+        }
+
+        /* ============ CTA BANNER ============ */
+        .cta-banner {
+            background: var(--accent);
+            border-radius: var(--radius-xl);
+            padding: 56px 40px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cta-banner h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-banner p {
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+            font-size: 1rem;
+        }
+        .cta-banner .btn {
+            position: relative;
+            z-index: 1;
+        }
+        .cta-banner .btn-primary {
+            background: #fff;
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .cta-banner .btn-primary:hover {
+            background: #f0ede7;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            padding: 48px 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .footer-links a {
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color var(--transition);
+        }
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+        .footer-copy {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.02em;
+        }
+
+        /* ============ SCROLL REVEAL ============ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============ MOBILE OVERLAY ============ */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+        .nav-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        @media (min-width: 769px) {
+            .nav-overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="nav" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <span class="nav-logo-dot"></span> CodeFlow AI
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#routes" data-nav-close>变现路线</a></li>
+                <li><a href="#navigator" data-nav-close>方向导航</a></li>
+                <li><a href="#cases" data-nav-close>学员案例</a></li>
+                <li><a href="#about" data-nav-close>关于我</a></li>
+                <li><a href="#community" data-nav-close>社群</a></li>
+                <li><a href="#cta" class="nav-cta" data-nav-close>免费领取指南</a></li>
+            </ul>
+            <button class="nav-hamburger" id="hamburger" aria-label="菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero">
+        <div class="hero-inner reveal">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span> 2025年最值得掌握的技能
+            </div>
+            <h1>
+                用<span class="highlight-word">AI编程</span>，<br>让普通人也能创造与赚钱
+            </h1>
+            <p class="hero-subtitle">
+                不写一行传统代码，借助AI工具开发插件、脚本、小程序。<br>从零基础到接单变现，我们带你走通每一条路。
+            </p>
+            <div class="hero-buttons">
+                <a href="#navigator" class="btn btn-primary">找到适合我的方向 →</a>
+                <a href="#routes" class="btn btn-secondary">了解变现路线</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== STATS BAR ==================== -->
+    <div class="stats-bar reveal">
+        <div class="stat-item">
+            <div class="stat-number">3,200+</div>
+            <div class="stat-label">累计学员</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">87%</div>
+            <div class="stat-label">零基础起步</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">21天</div>
+            <div class="stat-label">平均出单周期</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">¥580万+</div>
+            <div class="stat-label">学员累计收入</div>
+        </div>
+    </div>
+
+    <!-- ==================== CONTRAST ==================== -->
+    <section class="section" id="contrast">
+        <div class="section-inner">
+            <p class="section-label reveal">为什么选择AI编程</p>
+            <h2 class="section-title reveal">两条路，截然不同的结果</h2>
+            <p class="section-desc reveal">传统学编程需要数月甚至数年，而AI编程让你在数天内就能做出可以变现的产品。</p>
+            <div class="contrast-grid reveal">
+                <div class="contrast-card old">
+                    <span class="card-icon">📚</span>
+                    <h3>传统编程学习</h3>
+                    <p>啃语法、背框架、调试Bug到深夜……半年过去还在做Todo List，离赚钱遥遥无期。</p>
+                    <span class="card-tag">周期长 · 枯燥 · 难变现</span>
+                </div>
+                <div class="contrast-card new">
+                    <span class="card-icon">⚡</span>
+                    <h3>AI辅助编程</h3>
+                    <p>用自然语言描述需求，AI生成代码。3天做出Chrome插件，7天上线小程序，学完就能接单。</p>
+                    <span class="card-tag">上手快 · 有趣 · 直接变现</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ROUTES ==================== -->
+    <section class="section" id="routes">
+        <div class="section-inner">
+            <p class="section-label reveal">三条变现路线</p>
+            <h2 class="section-title reveal">按赚钱方式，选择你的路径</h2>
+            <p class="section-desc reveal">我们不是泛泛地教AI编程，而是围绕"如何赚钱"来设计每一条教学路线。</p>
+            <div class="route-grid reveal">
+                <div class="route-card">
+                    <div class="route-card-number">01</div>
+                    <h3>🛠️ 工具流变现</h3>
+                    <p>用Cursor / GitHub Copilot 写Chrome插件、自动化办公脚本，挂到平台售卖或接定制单。</p>
+                    <div class="route-tags">
+                        <span class="route-tag">Chrome插件</span>
+                        <span class="route-tag">自动化脚本</span>
+                        <span class="route-tag">接单平台</span>
+                    </div>
+                </div>
+                <div class="route-card">
+                    <div class="route-card-number">02</div>
+                    <h3>📱 内容/应用变现</h3>
+                    <p>搭建AI导航站、信息订阅工具、批量内容生成器，靠流量广告或付费订阅赚钱。</p>
+                    <div class="route-tags">
+                        <span class="route-tag">AI导航站</span>
+                        <span class="route-tag">订阅工具</span>
+                        <span class="route-tag">流量变现</span>
+                    </div>
+                </div>
+                <div class="route-card">
+                    <div class="route-card-number">03</div>
+                    <h3>🚀 微SaaS创业</h3>
+                    <p>用Bolt.new、v0.dev等无代码建站工具，快速搭建最小可行产品，验证市场需求。</p>
+                    <div class="route-tags">
+                        <span class="route-tag">无代码建站</span>
+                        <span class="route-tag">MVP验证</span>
+                        <span class="route-tag">独立创业</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== INTERACTIVE NAVIGATOR ==================== -->
+    <section class="section" id="navigator">
+        <div class="section-inner">
+            <p class="section-label reveal">变现方向导航</p>
+            <h2 class="section-title reveal">告诉我你的情况，帮你找到最佳路线</h2>
+            <p class="section-desc reveal">点击下方标签，查看为你量身定制的AI编程赚钱方向。</p>
+            <div class="navigator-wrap reveal">
+                <div class="navigator-tabs" id="navTabs">
+                    <button class="nav-tab active" data-target="tab-employee">💼 我是上班族</button>
+                    <button class="nav-tab" data-target="tab-freelancer">🧑‍💻 我想接单赚钱</button>
+                    <button class="nav-tab" data-target="tab-maker">🛠️ 我想做独立产品</button>
+                    <button class="nav-tab" data-target="tab-student">🎓 我是学生/新手</button>
+                </div>
+                <div class="navigator-content active" id="tab-employee">
+                    <h4>职场增效 → 副业起步</h4>
+                    <p>先从提升自己的工作效率开始，用AI编程写自动化脚本处理Excel、批量生成报告。积累经验后，将这些脚本封装成工具卖给同事或同行，自然过渡到副业变现。</p>
+                    <div class="rec-stack">
+                        <span class="rec-chip">Python自动化脚本</span>
+                        <span class="rec-chip">Excel批量处理工具</span>
+                        <span class="rec-chip">Cursor AI辅助</span>
+                        <span class="rec-chip">内部工具转售</span>
+                    </div>
+                </div>
+                <div class="navigator-content" id="tab-freelancer">
+                    <h4>接单变现 · 快速出单</h4>
+                    <p>学习用AI快速开发Chrome插件、网页爬虫、自动化填表工具，在接单平台上承接中小型开发需求。AI让你一个人就能完成以往需要一个团队的工作量。</p>
+                    <div class="rec-stack">
+                        <span class="rec-chip">Chrome插件开发</span>
+                        <span class="rec-chip">网页数据抓取</span>
+                        <span class="rec-chip">GitHub Copilot</span>
+                        <span class="rec-chip">猪八戒/Upwork接单</span>
+                    </div>
+                </div>
+                <div class="navigator-content" id="tab-maker">
+                    <h4>独立产品 · 被动收入</h4>
+                    <p>使用Bolt.new、v0.dev等工具快速搭建SaaS产品原型，结合AI能力打造差异化功能。从信息订阅工具到垂直领域AI助手，找到细分市场，建立订阅制收入。</p>
+                    <div class="rec-stack">
+                        <span class="rec-chip">Bolt.new建站</span>
+                        <span class="rec-chip">v0.dev原型设计</span>
+                        <span class="rec-chip">订阅制变现</span>
+                        <span class="rec-chip">独立开发者之路</span>
+                    </div>
+                </div>
+                <div class="navigator-content" id="tab-student">
+                    <h4>零基础入门 · 快速建立信心</h4>
+                    <p>从最基础的自然语言编程开始，先用AI做出一个小工具（比如自动整理文件、生成海报），获得成就感。再逐步深入，学习将工具产品化并尝试变现。</p>
+                    <div class="rec-stack">
+                        <span class="rec-chip">自然语言编程入门</span>
+                        <span class="rec-chip">小工具实战</span>
+                        <span class="rec-chip">Cursor新手教程</span>
+                        <span class="rec-chip">作品集积累</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CASES ==================== -->
+    <section class="section" id="cases">
+        <div class="section-inner">
+            <p class="section-label reveal">真实学员案例</p>
+            <h2 class="section-title reveal">他们做到了，你也可以</h2>
+            <p class="section-desc reveal">每个案例都包含完整的"想法→工具→成品→收入"全链路复盘。</p>
+            <div class="case-grid reveal">
+                <div class="case-card">
+                    <div class="case-card-visual">
+                        <span class="case-emoji">🧩</span>
+                    </div>
+                    <div class="case-card-body">
+                        <p class="case-meta">工具流变现 · 3周出单</p>
+                        <h4>小红书批量生成插件</h4>
+                        <p>学员@小李用Cursor开发了一款Chrome插件，可批量生成小红书图文笔记素材。挂到插件商店后，月均被动收入3,200元。</p>
+                        <span class="case-result">💰 月入3,200元</span>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-card-visual">
+                        <span class="case-emoji">🤖</span>
+                    </div>
+                    <div class="case-card-body">
+                        <p class="case-meta">微SaaS · 2个月上线</p>
+                        <h4>餐饮自动回复机器人</h4>
+                        <p>学员@阿杰用Bolt.new搭建了一款面向餐饮商家的自动回复SaaS，处理外卖平台上的客户咨询。首月即获12家付费商户。</p>
+                        <span class="case-result">💰 月入5,800元</span>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-card-visual">
+                        <span class="case-emoji">📊</span>
+                    </div>
+                    <div class="case-card-body">
+                        <p class="case-meta">内容变现 · 45天起量</p>
+                        <h4>AI行业信息聚合站</h4>
+                        <p>学员@小雯搭建了一个AI行业新闻聚合站，自动抓取并翻译海外AI动态。通过Google AdSense和 affiliate 链接，月入稳定过万。</p>
+                        <span class="case-result">💰 月入11,000元</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT ==================== -->
+    <section class="section" id="about">
+        <div class="section-inner">
+            <div class="about-grid reveal">
+                <div class="about-text">
+                    <p class="section-label">关于我</p>
+                    <h3>走过这条路，所以知道怎么带你走</h3>
+                    <p>我是一名曾经的"代码小白"，2024年初开始尝试用AI工具编程。从第一个自动化脚本开始，到如今搭建了多个盈利的SaaS产品，我深刻体会到：<strong>AI不是取代程序员，而是给普通人一把创造的杠杆</strong>。</p>
+                    <p>我坚信，在这个时代，每个人都有能力用AI做出有价值的东西——你需要的不是四年计算机学位，而是一个懂行的引路人和一个实战的社群。</p>
+                </div>
+                <div class="about-visual">
+                    <div class="about-stat-box">
+                        <div class="big-num">18</div>
+                        <div class="lbl">个月AI编程经验</div>
+                    </div>
+                    <div class="about-stat-box">
+                        <div class="big-num">40+</div>
+                        <div class="lbl">个实战项目交付</div>
+                    </div>
+                    <div class="about-stat-box">
+                        <div class="big-num">3,200+</div>
+                        <div class="lbl">学员共同成长</div>
+                    </div>
+                    <div class="about-stat-box">
+                        <div class="big-num">6</div>
+                        <div class="lbl">个盈利产品线</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== COMMUNITY ==================== -->
+    <section class="section" id="community">
+        <div class="section-inner">
+            <p class="section-label reveal">社群与服务</p>
+            <h2 class="section-title reveal">你不是一个人在学习</h2>
+            <p class="section-desc reveal">定价最高的产品，往往是一个高质量的圈子。我们提供的不只是课程。</p>
+            <div class="community-grid reveal">
+                <div class="community-item">
+                    <span class="comm-icon">📰</span>
+                    <h4>赚钱情报周报</h4>
+                    <p>每周更新AI编程最新变现机会</p>
+                </div>
+                <div class="community-item">
+                    <span class="comm-icon">🧪</span>
+                    <h4>爆款项目共练</h4>
+                    <p>每月一个实战项目，社群共同拆解</p>
+                </div>
+                <div class="community-item">
+                    <span class="comm-icon">💬</span>
+                    <h4>实时答疑</h4>
+                    <p>助教团队全天候在线，问题不过夜</p>
+                </div>
+                <div class="community-item">
+                    <span class="comm-icon">🤝</span>
+                    <h4>组队开发分润</h4>
+                    <p>找到搭档，一起做产品、一起分钱</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CTA BANNER ==================== -->
+    <section class="section" id="cta">
+        <div class="section-inner reveal">
+            <div class="cta-banner">
+                <h2>准备好用AI编程改变收入了吗？</h2>
+                <p>免费领取《5个最适合新手的AI编程赚钱方向》指南，开启你的第一步。</p>
+                <a href="#" class="btn btn-primary">免费领取指南 →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <a href="#" class="nav-logo">
+                <span class="nav-logo-dot"></span> CodeFlow AI
+            </a>
+            <div class="footer-links">
+                <a href="#routes">变现路线</a>
+                <a href="#navigator">方向导航</a>
+                <a href="#cases">学员案例</a>
+                <a href="#about">关于我</a>
+                <a href="#community">社群</a>
+            </div>
+            <p class="footer-copy">© 2025 CodeFlow AI. 用AI编程，让创造触手可及。</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============ NAVIGATION SCROLL EFFECT ============
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ============ MOBILE MENU ============
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function closeMenu() {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            navOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openMenu() {
+            hamburger.classList.add('active');
+            navLinks.classList.add('active');
+            navOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        hamburger.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        navOverlay.addEventListener('click', closeMenu);
+
+        // Close menu when clicking nav links on mobile
+        document.querySelectorAll('[data-nav-close]').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeMenu();
+                }
+            });
+        });
+
+        // ============ INTERACTIVE NAVIGATOR TABS ============
+        const navTabs = document.getElementById('navTabs');
+        const allTabs = navTabs.querySelectorAll('.nav-tab');
+        const allContents = document.querySelectorAll('.navigator-content');
+
+        navTabs.addEventListener('click', (e) => {
+            const tab = e.target.closest('.nav-tab');
+            if (!tab) return;
+
+            // Remove active from all tabs
+            allTabs.forEach(t => t.classList.remove('active'));
+            // Add active to clicked tab
+            tab.classList.add('active');
+
+            // Hide all contents
+            allContents.forEach(c => c.classList.remove('active'));
+            // Show target content
+            const targetId = tab.getAttribute('data-target');
+            const targetContent = document.getElementById(targetId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+
+        // ============ SCROLL REVEAL ANIMATION ============
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Once revealed, stop observing
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // ============ SMOOTH SCROLL FOR ALL ANCHOR LINKS ============
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    const navHeight = navbar.offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset -
+                        navHeight - 16;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ============ INITIAL LOAD: trigger visible for elements already in view ============
+        window.addEventListener('load', () => {
+            revealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 60) {
+                    el.classList.add('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
